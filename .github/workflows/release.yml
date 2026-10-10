@@ -59,7 +59,7 @@ jobs:
             echo
             echo "## Download"
             echo
-            echo "**[Speakey.dmg](https://github.com/Kuberwastaken/speakey/releases/download/${{ steps.version.outputs.tag }}/Speakey.dmg)** — requires macOS 26 (Tahoe) on Apple silicon."
+            echo "**[Speakey.dmg](https://github.com/Devvor/speakey-next/releases/download/${{ steps.version.outputs.tag }}/Speakey.dmg)** — requires macOS 26 (Tahoe) on Apple silicon."
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 

@@ -171,7 +171,7 @@ jobs:
           body: |
             Development build from `${{ github.sha }}`.
 
-            **[Speakey-Dev.dmg](https://github.com/Kuberwastaken/speakey/releases/download/${{ steps.version.outputs.tag }}/Speakey-Dev.dmg)** - Universal dev build for all Macs (Apple Silicon + Intel).
+            **[Speakey-Dev.dmg](https://github.com/Devvor/speakey-next/releases/download/${{ steps.version.outputs.tag }}/Speakey-Dev.dmg)** - Universal dev build for all Macs (Apple Silicon + Intel).
           generate_release_notes: false
           make_latest: false
           prerelease: true

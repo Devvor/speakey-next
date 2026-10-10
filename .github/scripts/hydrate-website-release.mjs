@@ -4,7 +4,7 @@ import { join } from "node:path";
 const siteDirectory = process.argv[2];
 if (!siteDirectory) throw new Error("Usage: hydrate-website-release.mjs <site-directory>");
 
-const response = await fetch("https://api.github.com/repos/Kuberwastaken/speakey/releases?per_page=20", {
+const response = await fetch("https://api.github.com/repos/Devvor/speakey-next/releases?per_page=20", {
   headers: {
     Accept: "application/vnd.github+json",
     Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
