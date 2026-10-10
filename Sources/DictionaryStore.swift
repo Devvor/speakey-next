@@ -455,6 +455,66 @@ final class DictionaryStore: ObservableObject {
         return entries.firstIndex { Self.canonical($0.term) == canonicalTerm }
     }
 
+    /// Seeds the dictionary on first launch from the bundled vocabulary.txt
+    /// (crypto/dev jargon). Only runs when the store has no entries yet, so
+    /// it never fights the user's own dictionary on later launches.
+    private func seedFromBundledVocabularyIfNeeded() {
+        guard entries.isEmpty else { return }
+        guard let url = Bundle.main.url(forResource: "vocabulary", withExtension: "txt"),
+              let text = try? String(contentsOf: url, encoding: .utf8) else { return }
+
+        let now = Date()
+        let terms = text
+            .components(separatedBy: .newlines)
+            .map(Self.cleaned)
+            .filter { !$0.isEmpty }
+
+        for term in terms where index(of: term) == nil {
+            entries.append(DictionaryEntry(
+                term: term,
+                source: .manual,
+                status: .active,
+                isEnabled: true,
+                createdAt: now,
+                updatedAt: now
+            ))
+        }
+        if !entries.isEmpty { persist() }
+    }
+
+    /// Merges terms from a user-editable file at
+    /// ~/Library/Application Support/<AppName>/vocabulary.txt if present.
+    /// Lets users maintain their hints in plain text without touching the app.
+    private func mergeUserEditableVocabularyIfPresent() {
+        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+        guard let dir = appSupport else { return }
+        let fileURL = dir
+            .appendingPathComponent(AppName.displayName, isDirectory: true)
+            .appendingPathComponent("vocabulary.txt")
+
+        guard let text = try? String(contentsOf: fileURL, encoding: .utf8) else { return }
+
+        let now = Date()
+        let terms = text
+            .components(separatedBy: .newlines)
+            .map(Self.cleaned)
+            .filter { !$0.isEmpty }
+
+        var didChange = false
+        for term in terms where index(of: term) == nil {
+            entries.append(DictionaryEntry(
+                term: term,
+                source: .manual,
+                status: .active,
+                isEnabled: true,
+                createdAt: now,
+                updatedAt: now
+            ))
+            didChange = true
+        }
+        if didChange { persist() }
+    }
+
     private func persist() {
         guard let data = try? JSONEncoder().encode(entries) else { return }
         defaults.set(data, forKey: storageKey)

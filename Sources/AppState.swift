@@ -3116,10 +3116,7 @@ final class AppState: ObservableObject, @unchecked Sendable {
 
                         if trimmedFinalTranscript.isEmpty {
                             self.statusText = shouldPressEnterAfterPaste ? enterOnlyStatusText : "Nothing to transcribe"
-                            self.clearPendingOverlayDismissToken()
-                            if !self.showPostTranscriptionUpdateReminderIfNeeded() {
-                                self.overlayManager.dismiss()
-                            }
+                            self.overlayManager.dismiss()
                             if shouldPressEnterAfterPaste {
                                 self.pressEnterWhenShortcutReleased()
                             }
@@ -3128,10 +3125,7 @@ final class AppState: ObservableObject, @unchecked Sendable {
                             if shouldPersistRawDictationFallback {
                                 self.scheduleOverlayDismissAfterFailureIndicator(after: 2.5)
                             } else {
-                                self.clearPendingOverlayDismissToken()
-                                if !self.showPostTranscriptionUpdateReminderIfNeeded() {
-                                    self.overlayManager.dismiss()
-                                }
+                                self.overlayManager.dismiss()
                             }
 
                             let pendingClipboardRestore = self.writeTranscriptToPasteboard(trimmedFinalTranscript)
@@ -3494,53 +3488,13 @@ final class AppState: ObservableObject, @unchecked Sendable {
 
     @MainActor
     private func showPostTranscriptionUpdateReminderIfNeeded() -> Bool {
-        if debugShowsUpdateReminderAfterDictation {
-            showDebugUpdateAvailableOverlay()
-            return true
-        }
-
-        guard updateManager.shouldShowPostTranscriptionReminder() else { return false }
-
-        let dismissToken = UUID()
-        pendingOverlayDismissToken = dismissToken
-        updateManager.markPostTranscriptionReminderShown()
-        overlayManager.showUpdateAvailable(version: updateManager.latestReleaseVersion)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + postTranscriptionUpdateReminderDuration) { [weak self] in
-            guard let self, self.pendingOverlayDismissToken == dismissToken else { return }
-            self.pendingOverlayDismissToken = nil
-            self.overlayManager.dismiss()
-        }
-
-        return true
-    }
-
-    @MainActor
-    func showDebugUpdateAvailableOverlay() {
-        let version = updateManager.latestReleaseVersion.isEmpty ? "9.9.9" : updateManager.latestReleaseVersion
-        let dismissToken = UUID()
-        if isDebugOverlayActive || debugOverlayTimer != nil {
-            stopDebugOverlay()
-        }
-        pendingOverlayDismissToken = dismissToken
-        overlayManager.showUpdateAvailable(version: version)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + postTranscriptionUpdateReminderDuration) { [weak self] in
-            guard let self, self.pendingOverlayDismissToken == dismissToken else { return }
-            self.pendingOverlayDismissToken = nil
-            self.overlayManager.dismiss()
-        }
+        return false
     }
 
     @MainActor
     private func handleUpdateOverlayPressed() {
         clearPendingOverlayDismissToken()
         overlayManager.dismiss()
-        selectedSettingsTab = .general
-        NotificationCenter.default.post(name: .showSettings, object: nil)
-
-        DispatchQueue.main.async {
-        }
     }
 
     private func scheduleOverlayDismissAfterFailureIndicator(after delay: TimeInterval) {

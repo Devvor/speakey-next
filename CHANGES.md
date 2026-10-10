@@ -1,32 +1,45 @@
-# CHANGES
+# CHANGES — Speakey fork of Megaphone
 
-1. App updater and release-surface cleanup
+Fork base: [Kuberwastaken/megaphone](https://github.com/Kuberwastaken/megaphone) (MIT). This fork hardens it for personal/product use under the Devvor org. Each numbered change is one or more commits.
 
-This fork removes legacy update-management wiring and related release-surface references that were no longer part of the maintained product flow. The goal is to simplify runtime behavior and reduce maintenance risk by eliminating dead or obsolete update paths while keeping the app startup and core dictation behavior intact.
+## 1. Auto-updater removed entirely (safety)
 
-2. Setup and onboarding surface simplification
+- Deleted `Sources/UpdateManager.swift` and every reference: settings Updates card, menu-bar "Check for Updates" item, post-transcription update reminder overlay, all `update*` UserDefaults keys.
+- The app now has **zero update mechanism and zero external release surface**. Updates happen by rebuilding from source — no third-party server can push code to this app.
+- The old updater verified publisher identity, but a compromised upstream (GitHub account or his `updates.json` host) would still pass that check because the attacker would hold the signing identity. Removing the mechanism removes the class of risk.
 
-The setup/onboarding experience was trimmed to remove obsolete or noisy components and align the UI with the fork’s current scope. This includes streamlining informational sections and reducing coupling to external metadata so first-run flow stays clear and deterministic.
+## 2. All network calls removed from app code (privacy + safety)
 
-3. GitHub/community metadata handling updates
+- Removed the GitHub stats feature (stargazers/contributors fetch + UI) from both SetupView and SettingsView, and deleted `GitHubMetadataCache`.
+- Verified end state: **zero** `URLSession`/`URLRequest`/`NWConnection` usages in `Sources/` and `Launcher/`. The only network-adjacent code left is `NetworkMonitor.swift` (local connectivity status via `NWPathMonitor`, no data transfer) and Apple's system-managed SpeechAnalyzer model download (a system API, not app code).
+- Remaining URLs in code are static links the user can click (open in browser), never fetched by the app.
 
-Community-facing metadata presentation was adjusted to match the fork’s reduced external dependency model. Where social/repository stats were previously fetched or displayed, the code now avoids fragile assumptions and uses safer defaults so the app remains stable even when remote API data is unavailable or intentionally de-scoped.
+## 3. Rebrand: Megaphone → Speakey
 
-4. Persistence boundary tightening
+- App name, menu items, notifications, setup flow, and UserDefaults domain now Speakey; bundle id `com.devvor.speakey` (dev build: `com.devvor.speakey.dev`).
+- MIT license kept; attribution added in README + `NOTICE`: "Speakey is based on Megaphone by Kuberwastaken."
 
-Persistence entry points that were outside the intended long-term data model were removed or consolidated. The fork keeps persistence where it is product-critical (e.g., user settings and supported stores) and drops deprecated pathways, reducing accidental state drift and simplifying future migrations.
+## 4. Recording retention off by default (privacy)
 
-5. Internal state and integration consistency pass
+- Raw dictation audio and run history are **no longer persisted to disk** unless the user enables "Save recordings & history" in Settings (default OFF; `persistHistoryEnabled`).
+- With it off, history is in-memory only; audio files are never written to Application Support.
 
-Related state wiring, call sites, and view-model edges were normalized after the removals above so symbols, references, and behavior stay coherent. This pass focused on compile-time consistency and minimal behavioral change, ensuring remaining features still connect cleanly end-to-end.
+## 5. Vocabulary hints (accuracy)
 
-6. Test and safety follow-through
+- The existing learnable DictionaryStore feature is kept.
+- Added bundled `Resources/vocabulary.txt` (40 crypto/DeFi + developer terms: perp, OI, funding, Hyperliquid, liquidation cascade, CoreML, Parakeet, etc.). Seeded into the dictionary on first launch when the store is empty.
+- Added a user-editable merge path: `~/Library/Application Support/Speakey/vocabulary.txt` is merged at startup if present, so hints can be maintained in plain text.
+- Makefile copies `vocabulary.txt` into the app bundle's Resources.
 
-Tests and supporting code were aligned with the forked behavior where applicable, and stale references were removed to keep the suite representative of current functionality. The emphasis was on preventing regressions from symbol removal and keeping maintenance cost low by avoiding unused paths.
+## 6. Transcript logging audit (privacy)
+
+- Swept all `print`/log statements: no transcript text is logged anywhere; existing code already logged only counts/confidence/status. (Verified by grep — none found.)
+
+## 7. What was NOT changed
+
+- The core engine (Apple SpeechAnalyzer streaming + FoundationModels cleanup), the fn-key handling, overlay, and smart-cleanup pipeline are untouched — this fork keeps the parts that make dictation accurate, and removes the parts that phone home, auto-update, or persist your voice.
 
 ## Needs a Mac
 
-- Final Xcode 26 project build and archive validation.
-- Code signing and notarization verification with release credentials.
-- DMG creation + installer/open-path smoke test.
-- On-device/manual validation of key workflows (recording, transcription, shortcuts, settings).
+- Final Xcode 26 build (`make`), code signing, and DMG creation.
+- On-device smoke test: fn-hold dictation, hands-free mode, vocabulary hints effect, Settings toggle for retention.
