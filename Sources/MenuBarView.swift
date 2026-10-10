@@ -2,7 +2,6 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject var appState: AppState
-    @ObservedObject private var updateManager = UpdateManager.shared
 
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"

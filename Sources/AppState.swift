@@ -3488,7 +3488,6 @@ final class AppState: ObservableObject, @unchecked Sendable {
             return true
         }
 
-        let updateManager = UpdateManager.shared
         guard updateManager.shouldShowPostTranscriptionReminder() else { return false }
 
         let dismissToken = UUID()
@@ -3507,7 +3506,6 @@ final class AppState: ObservableObject, @unchecked Sendable {
 
     @MainActor
     func showDebugUpdateAvailableOverlay() {
-        let updateManager = UpdateManager.shared
         let version = updateManager.latestReleaseVersion.isEmpty ? "9.9.9" : updateManager.latestReleaseVersion
         let dismissToken = UUID()
         if isDebugOverlayActive || debugOverlayTimer != nil {
@@ -3531,9 +3529,6 @@ final class AppState: ObservableObject, @unchecked Sendable {
         NotificationCenter.default.post(name: .showSettings, object: nil)
 
         DispatchQueue.main.async {
-            if UpdateManager.shared.updateAvailable {
-                UpdateManager.shared.showUpdateAlert()
-            }
         }
     }
 

@@ -28,7 +28,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             appState.startHotkeyMonitoring()
             appState.startAccessibilityPolling()
             Task { @MainActor in
-                UpdateManager.shared.startPeriodicChecks()
             }
 
             if !AXIsProcessTrusted() {
@@ -201,7 +200,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         appState.startHotkeyMonitoring()
         appState.startAccessibilityPolling()
         Task { @MainActor in
-            UpdateManager.shared.startPeriodicChecks()
         }
 
         if !AXIsProcessTrusted() {

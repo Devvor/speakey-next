@@ -267,7 +267,6 @@ struct GeneralSettingsView: View {
     @State private var copiedBuildInfo = false
     @State private var copiedBuildInfoResetWorkItem: DispatchWorkItem?
     @StateObject private var githubCache = GitHubMetadataCache.shared
-    @ObservedObject private var updateManager = UpdateManager.shared
     private let megaphoneRepoURL = URL(string: "https://github.com/Kuberwastaken/megaphone")!
 
     private var appDisplayName: String {
