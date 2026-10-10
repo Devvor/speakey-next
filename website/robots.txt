@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://megaphone.kuber.studio/sitemap.xml
+Sitemap: https://speakey.kuber.studio/sitemap.xml

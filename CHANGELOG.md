@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Megaphone are documented here. Megaphone is a fork
+All notable changes to Speakey are documented here. Speakey is a fork
 of [FreeFlow](https://github.com/zachlatta/freeflow); entries below 1.0.0
 are inherited FreeFlow history.
 
@@ -20,7 +20,7 @@ This project uses semantic versioning for public releases. Use `MAJOR.MINOR.PATC
 
 ### Added
 
-- Transforms: say “Hey Megaphone, polish that” to tighten your last dictation, or “prompt that” to restructure it as a clear AI prompt — plus your own named rewrite templates, managed next to Voice Macros. Entirely on-device.
+- Transforms: say “Hey Speakey, polish that” to tighten your last dictation, or “prompt that” to restructure it as a clear AI prompt — plus your own named rewrite templates, managed next to Voice Macros. Entirely on-device.
 - “Scratch that” (or “delete that”) spoken as a whole utterance deletes the dictation you just made, safely: nothing is deleted if the cursor moved. Toggleable in Settings.
 - Revert Last Cleanup in the menu bar restores exactly what you said when the smart cleanup over-edited, replacing the cleaned text in place.
 - Mouse-button push-to-talk (off by default): bind the middle or a side mouse button as a hold-to-talk trigger. The bound click never reaches the app under the cursor.
@@ -36,13 +36,13 @@ This project uses semantic versioning for public releases. Use `MAJOR.MINOR.PATC
 
 ### Added
 
-- Ask Megaphone can now read the visible window, entirely on-device: requests like “reply to this email” or “answer his question” use the text on screen as reference. The accessibility tree is read first, with Vision OCR of the focused window as a fallback when Screen Recording is already granted — nothing ever leaves your Mac. Controlled by a new “Use on-screen text as context” toggle (on by default).
+- Ask Speakey can now read the visible window, entirely on-device: requests like “reply to this email” or “answer his question” use the text on screen as reference. The accessibility tree is read first, with Vision OCR of the focused window as a fallback when Screen Recording is already granted — nothing ever leaves your Mac. Controlled by a new “Use on-screen text as context” toggle (on by default).
 - Formatting now adapts to the app you're dictating into. Markdown-native surfaces like Obsidian, Notion, and GitHub get markdown lists and structure; chat apps stay plain text; documents welcome lists. Dictated “bullet point …” markers become real list lines, and a clear “first…, second…, third…” enumeration in a document formats itself as a list.
 
 ### Fixed
 
 - WhatsApp and Telegram now count as casual chat instead of general writing, and a window title that merely contains an email address no longer masquerades as webmail context.
-- Ask Megaphone responses no longer leak XML wrappers or echo prompt sections back into your text, and “make that a bulleted list” reliably replaces the dictation it refers to.
+- Ask Speakey responses no longer leak XML wrappers or echo prompt sections back into your text, and “make that a bulleted list” reliably replaces the dictation it refers to.
 - Follow-up wake commands replace the intended earlier dictation more reliably.
 
 ### Removed
@@ -53,41 +53,41 @@ This project uses semantic versioning for public releases. Use `MAJOR.MINOR.PATC
 
 ### Added
 
-- Hey Megaphone can use a recent dictation from the same app and window, so follow-ups such as “make that formal” or “format that as a list” work without repeating the text.
-- Smart Cleanup, Edit Mode, and Hey Megaphone now adapt their writing style for email, work chat, casual chat, documents, and technical apps using local app and window context.
-- The new Megaphone website is available at [megaphone.kuber.studio](https://megaphone.kuber.studio), with release-aware downloads, installation help, and automatic updates when a new version ships.
+- Hey Speakey can use a recent dictation from the same app and window, so follow-ups such as “make that formal” or “format that as a list” work without repeating the text.
+- Smart Cleanup, Edit Mode, and Hey Speakey now adapt their writing style for email, work chat, casual chat, documents, and technical apps using local app and window context.
+- The new Speakey website is available at [speakey.kuber.studio](https://speakey.kuber.studio), with release-aware downloads, installation help, and automatic updates when a new version ships.
 
 ### Improved
 
-- Wake phrase recognition now handles “mega phone” as separate words and additional common SpeechAnalyzer variations while keeping the shorter plain “Megaphone” trigger optional.
+- Wake phrase recognition now handles “mega phone” as separate words and additional common SpeechAnalyzer variations while keeping the shorter plain “Speakey” trigger optional.
 - App-aware writing recognizes Mail, Outlook, Gmail, Slack, Teams, Discord, Messages, document editors, terminals, and code editors, including Slack and Discord in a browser.
 - Recent-text follow-ups no longer borrow text from another window in the same application.
 
 ### Fixed
 
-- Hey Megaphone results no longer paste stray `<response>` tags.
+- Hey Speakey results no longer paste stray `<response>` tags.
 - App-specific context now reaches Edit Mode as well as Smart Cleanup and Inline AI.
-- Update checks now use Megaphone’s release manifest instead of GitHub’s shared unauthenticated API quota, preventing false “GitHub returned status 403” failures on rate-limited networks.
+- Update checks now use Speakey’s release manifest instead of GitHub’s shared unauthenticated API quota, preventing false “GitHub returned status 403” failures on rate-limited networks.
 - The GitHub API remains available as a fallback and reports a clear rate-limit message with the local reset time when GitHub rejects a request.
-- Hey Megaphone and Edit Mode no longer fail with an unsupported-language error when app-aware context contains a macOS bundle identifier.
+- Hey Speakey and Edit Mode no longer fail with an unsupported-language error when app-aware context contains a macOS bundle identifier.
 
 ## [1.1.4] - 2026-07-15
 
 ### Fixed
 
-- Opening Megaphone on macOS 15 or earlier now shows a clear message that macOS 26 (Tahoe) is required, with a button that opens Software Update, instead of Launch Services rejecting the app with the opaque error -10825. The app now starts through a small launcher that hands off to the real Megaphone binary on macOS 26 and later. (#1)
+- Opening Speakey on macOS 15 or earlier now shows a clear message that macOS 26 (Tahoe) is required, with a button that opens Software Update, instead of Launch Services rejecting the app with the opaque error -10825. The app now starts through a small launcher that hands off to the real Speakey binary on macOS 26 and later. (#1)
 
 ## [1.1.3] - 2026-07-15
 
 ### Added
 
-- Inline AI (Alpha): hold the normal dictation shortcut and begin with “Hey Megaphone” to ask a question or generate text directly in the active app, powered entirely by Apple's on-device Foundation Models framework.
-- Inline AI can now use a recent dictation in the same app as context, so follow-ups such as “Hey Megaphone, make that formal” rewrite the sentence you just entered.
-- An optional shorter “Megaphone” trigger and a master switch to turn Inline AI off completely.
+- Inline AI (Alpha): hold the normal dictation shortcut and begin with “Hey Speakey” to ask a question or generate text directly in the active app, powered entirely by Apple's on-device Foundation Models framework.
+- Inline AI can now use a recent dictation in the same app as context, so follow-ups such as “Hey Speakey, make that formal” rewrite the sentence you just entered.
+- An optional shorter “Speakey” trigger and a master switch to turn Inline AI off completely.
 
 ### Improved
 
-- SpeechAnalyzer is biased toward the Megaphone wake phrases and safely recognizes common leading variations such as “mega phone,” “made a phone,” and “he made a phone.” These aliases never rewrite ordinary words in the middle of dictation.
+- SpeechAnalyzer is biased toward the Speakey wake phrases and safely recognizes common leading variations such as “mega phone,” “made a phone,” and “he made a phone.” These aliases never rewrite ordinary words in the middle of dictation.
 
 ### Fixed
 
@@ -103,7 +103,7 @@ This project uses semantic versioning for public releases. Use `MAJOR.MINOR.PATC
 
 ### Changed
 
-- The README demo now uses a real high-resolution recording across Claude Code, Codex, Cursor CLI, and Google Docs, with production cuts and a focused Megaphone overlay animation.
+- The README demo now uses a real high-resolution recording across Claude Code, Codex, Cursor CLI, and Google Docs, with production cuts and a focused Speakey overlay animation.
 
 ### Fixed
 
@@ -114,9 +114,9 @@ This project uses semantic versioning for public releases. Use `MAJOR.MINOR.PATC
 
 ### Added
 
-- Smart Cleanup powered by Apple's on-device Foundation Models framework. Megaphone prewarms a fresh private session while recording, then removes fillers, resolves self-corrections, and improves punctuation before pasting.
+- Smart Cleanup powered by Apple's on-device Foundation Models framework. Speakey prewarms a fresh private session while recording, then removes fillers, resolves self-corrections, and improves punctuation before pasting.
 - Basic Cleanup, an instant deterministic fallback that removes conservative filler and stutter patterns without a language model.
-- Explicit heard-to-written corrections such as `mega phone -> Megaphone`, applied to Basic Cleanup and supplied as required spellings to Smart Cleanup.
+- Explicit heard-to-written corrections such as `mega phone -> Speakey`, applied to Basic Cleanup and supplied as required spellings to Smart Cleanup.
 - Restored on-device cleanup instructions and app-context hints, including user-defined trigger phrases and formatting preferences.
 - Restored Output Language and Edit Mode using the on-device model, with safe fallbacks when Apple Intelligence is unavailable.
 - Added a non-blocking Apple Intelligence readiness step for new installs and a one-time upgrade prompt when Smart Cleanup is selected but Apple Intelligence is disabled. Users can open System Settings or continue with Basic Cleanup.
@@ -148,34 +148,34 @@ This project uses semantic versioning for public releases. Use `MAJOR.MINOR.PATC
 
 ### Removed
 
-- The API key and provider configuration UI is gone from Settings — Megaphone is now fully on-device end to end, with no cloud option surfaced anywhere. (The LLM cleanup layer remains dormant in the codebase for a possible on-device Apple Foundation Models port.)
+- The API key and provider configuration UI is gone from Settings — Speakey is now fully on-device end to end, with no cloud option surfaced anywhere. (The LLM cleanup layer remains dormant in the codebase for a possible on-device Apple Foundation Models port.)
 
 ## [1.0.2] - 2026-07-14
 
 ### Removed
 
-- The API key step is gone from setup entirely — Megaphone works out of the box with on-device transcription. An LLM key for optional AI cleanup can still be added in Settings.
+- The API key step is gone from setup entirely — Speakey works out of the box with on-device transcription. An LLM key for optional AI cleanup can still be added in Settings.
 
 ### Fixed
 
-- The Accessibility setup step no longer hard-blocks: it explains that macOS can pin a permission grant to a previous version of the app (remove Megaphone from the Accessibility list and re-add it), and adds a "Continue anyway" escape hatch. Same for Screen Recording.
+- The Accessibility setup step no longer hard-blocks: it explains that macOS can pin a permission grant to a previous version of the app (remove Speakey from the Accessibility list and re-add it), and adds a "Continue anyway" escape hatch. Same for Screen Recording.
 - Releases are now signed with a persistent signing identity instead of ad-hoc, so macOS permission grants (Accessibility, Microphone, Screen Recording) survive app updates. One final re-grant is needed when updating to this version.
 
 ## [1.0.1] - 2026-07-14
 
 ### Fixed
 
-- The DMG installer window now uses Megaphone's dark liquid-glass background instead of the broken FreeFlow artwork with clipped text.
-- The setup welcome card now shows the Megaphone maintainer's GitHub avatar instead of a hardcoded upstream avatar.
-- The API key step in setup is now clearly optional and skippable — transcription is fully on-device, and the key only powers AI cleanup and app context. Megaphone dictates fine without one.
+- The DMG installer window now uses Speakey's dark liquid-glass background instead of the broken FreeFlow artwork with clipped text.
+- The setup welcome card now shows the Speakey maintainer's GitHub avatar instead of a hardcoded upstream avatar.
+- The API key step in setup is now clearly optional and skippable — transcription is fully on-device, and the key only powers AI cleanup and app context. Speakey dictates fine without one.
 
 ## [1.0.0] - 2026-07-14
 
-First Megaphone release, forked from FreeFlow 1.1.0.
+First Speakey release, forked from FreeFlow 1.1.0.
 
 ### Changed
 
-- **Renamed to Megaphone**, with a new liquid-glass monochrome megaphone icon.
+- **Renamed to Speakey**, with a new liquid-glass monochrome speakey icon.
 - **Transcription now runs entirely on-device** via Apple's SpeechAnalyzer (requires macOS 26). Audio is analyzed while you speak, so the transcript is ready almost instantly when you stop — and recordings never leave your Mac. The cloud transcription stack (transcription provider/model settings, transcription API URL and key, realtime WebSocket streaming, and background HTTP pre-transcription) has been removed; the configured API key is now used only for LLM cleanup and app context.
 - The transcription language picker now lists the languages supported by the on-device speech model, and Settings shows the model's install status with a download button.
 - Custom vocabulary now also biases the on-device speech model directly (via analyzer contextual strings), in addition to guiding LLM cleanup.

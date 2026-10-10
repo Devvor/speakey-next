@@ -4,12 +4,12 @@ import { join } from "node:path";
 const siteDirectory = process.argv[2];
 if (!siteDirectory) throw new Error("Usage: hydrate-website-release.mjs <site-directory>");
 
-const response = await fetch("https://api.github.com/repos/Kuberwastaken/megaphone/releases?per_page=20", {
+const response = await fetch("https://api.github.com/repos/Kuberwastaken/speakey/releases?per_page=20", {
   headers: {
     Accept: "application/vnd.github+json",
     Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
     "X-GitHub-Api-Version": "2022-11-28",
-    "User-Agent": "megaphone-pages-deploy"
+    "User-Agent": "speakey-pages-deploy"
   }
 });
 if (!response.ok) throw new Error(`GitHub release lookup failed: ${response.status} ${response.statusText}`);
@@ -23,9 +23,9 @@ const isStableSemver = release =>
   /^v?\d+\.\d+\.\d+$/.test(String(release.tag_name || ""));
 const stableReleases = releases.filter(isStableSemver);
 const release = stableReleases[0];
-if (!release) throw new Error("No stable semantic Megaphone release was found");
+if (!release) throw new Error("No stable semantic Speakey release was found");
 const version = String(release.tag_name || "").replace(/^v/i, "");
-const dmg = release.assets?.find(asset => asset.name === "Megaphone.dmg");
+const dmg = release.assets?.find(asset => asset.name === "Speakey.dmg");
 if (!version || !release.published_at || !release.html_url || !dmg?.browser_download_url) {
   throw new Error("Latest GitHub release is missing required website metadata");
 }
@@ -45,7 +45,7 @@ const firstBullet = String(release.body || "")
   .replace(/\[([^\]]+)]\([^\)]+\)/g, "$1")
   .replace(/\s*\(#\d+\)\s*$/, "")
   .trim();
-const fallbackHighlight = `Megaphone ${version} is now available.`;
+const fallbackHighlight = `Speakey ${version} is now available.`;
 const rawHighlight = firstBullet || fallbackHighlight;
 const highlight = rawHighlight.length > 210
   ? `${rawHighlight.slice(0, 207).replace(/\s+\S*$/, "")}…`
@@ -91,7 +91,7 @@ const updateManifest = {
     html_url: item.html_url,
     published_at: item.published_at,
     assets: (item.assets || [])
-      .filter(asset => asset.name === "Megaphone.dmg")
+      .filter(asset => asset.name === "Speakey.dmg")
       .map(asset => ({
         name: asset.name,
         browser_download_url: asset.browser_download_url,
@@ -104,4 +104,4 @@ await writeFile(
   `${JSON.stringify(updateManifest, null, 2)}\n`
 );
 
-console.log(`Hydrated website with Megaphone ${version}, published ${releaseDate}`);
+console.log(`Hydrated website with Speakey ${version}, published ${releaseDate}`);

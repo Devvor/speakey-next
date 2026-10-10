@@ -267,7 +267,7 @@ struct GeneralSettingsView: View {
     @State private var copiedBuildInfo = false
     @State private var copiedBuildInfoResetWorkItem: DispatchWorkItem?
     @StateObject private var githubCache = GitHubMetadataCache.shared
-    private let megaphoneRepoURL = URL(string: "https://github.com/Kuberwastaken/megaphone")!
+    private let speakeyRepoURL = URL(string: "https://github.com/Kuberwastaken/speakey")!
 
     private var appDisplayName: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
@@ -280,7 +280,7 @@ struct GeneralSettingsView: View {
     }
 
     private var appBuildNumber: String {
-        Bundle.main.object(forInfoDictionaryKey: "MegaphoneBuildTag") as? String
+        Bundle.main.object(forInfoDictionaryKey: "SpeakeyBuildTag") as? String
             ?? Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
             ?? "unknown"
     }
@@ -321,7 +321,7 @@ struct GeneralSettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
-                    Text("SpeechAnalyzer transcribes while you talk. Megaphone prewarms Apple's on-device language model alongside it, then gives Smart Cleanup a brief moment to tidy the result. If Apple Intelligence is unavailable or slow, the instant Basic pass quietly takes over. Your voice and words stay on this Mac either way.")
+                    Text("SpeechAnalyzer transcribes while you talk. Speakey prewarms Apple's on-device language model alongside it, then gives Smart Cleanup a brief moment to tidy the result. If Apple Intelligence is unavailable or slow, the instant Basic pass quietly takes over. Your voice and words stay on this Mac either way.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -342,9 +342,9 @@ struct GeneralSettingsView: View {
                             .clipShape(Circle())
 
                             Button {
-                                openURL(megaphoneRepoURL)
+                                openURL(speakeyRepoURL)
                             } label: {
-                                Text("Kuberwastaken/megaphone")
+                                Text("Kuberwastaken/speakey")
                                     .font(.system(.caption, design: .monospaced).weight(.medium))
                             }
                             .buttonStyle(.plain)
@@ -369,7 +369,7 @@ struct GeneralSettingsView: View {
                             .background(Capsule().fill(Color.yellow.opacity(0.14)))
 
                             Button {
-                                openURL(megaphoneRepoURL)
+                                openURL(speakeyRepoURL)
                             } label: {
                                 HStack(spacing: 4) {
                                     Image(systemName: "star")
@@ -454,7 +454,7 @@ struct GeneralSettingsView: View {
                 SettingsCard("Mouse Dictation", icon: "computermouse.fill") {
                     mouseDictationSection
                 }
-                SettingsCard("Ask Megaphone", icon: "sparkles") {
+                SettingsCard("Ask Speakey", icon: "sparkles") {
                     wakeCommandSection
                 }
                 SettingsCard("Audio During Dictation", icon: "speaker.slash.fill") {
@@ -846,12 +846,12 @@ struct GeneralSettingsView: View {
         }
     }
 
-    // MARK: Ask Megaphone
+    // MARK: Ask Speakey
 
     private var wakeCommandSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Toggle("Enable Ask Megaphone", isOn: $appState.wakeCommandsEnabled)
+                Toggle("Enable Ask Speakey", isOn: $appState.wakeCommandsEnabled)
                 Text("ALPHA")
                     .font(.system(size: 9, weight: .bold))
                     .foregroundStyle(.purple)
@@ -861,7 +861,7 @@ struct GeneralSettingsView: View {
             }
 
             HStack {
-                Text("“Hey Megaphone”")
+                Text("“Hey Speakey”")
                     .font(.caption.weight(.semibold))
                 Spacer()
                 Text("Always on")
@@ -871,8 +871,8 @@ struct GeneralSettingsView: View {
             .opacity(appState.wakeCommandsEnabled ? 1 : 0.5)
 
             Toggle(
-                "Also use “Megaphone”",
-                isOn: $appState.plainMegaphoneWakeWordEnabled
+                "Also use “Speakey”",
+                isOn: $appState.plainSpeakeyWakeWordEnabled
             )
             .disabled(!appState.wakeCommandsEnabled)
 
@@ -882,7 +882,7 @@ struct GeneralSettingsView: View {
             )
             .disabled(!appState.wakeCommandsEnabled)
 
-            Text("Inline AI is in alpha. Hold your normal dictation shortcut and start with “Hey Megaphone” to ask a question, generate text, or change your previous dictation — try “make that formal.” Megaphone uses the active app and recent text as on-device context, removes the phrase, and pastes the answer. The shorter trigger is optional. With on-screen text enabled, requests like “reply to this email” read the visible window entirely on-device — via accessibility, or a window snapshot when Screen Recording is already granted.")
+            Text("Inline AI is in alpha. Hold your normal dictation shortcut and start with “Hey Speakey” to ask a question, generate text, or change your previous dictation — try “make that formal.” Speakey uses the active app and recent text as on-device context, removes the phrase, and pastes the answer. The shorter trigger is optional. With on-screen text enabled, requests like “reply to this email” read the visible window entirely on-device — via accessibility, or a window snapshot when Screen Recording is already granted.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -1286,7 +1286,7 @@ struct DictionarySettingsView: View {
             VStack(spacing: 20) {
                 SettingsCard("Your Dictionary", icon: "text.book.closed.fill") {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Teach Megaphone the names, products, acronyms, and technical terms that make your writing yours. Dictionary words give both transcription and Smart Cleanup the right spelling, and stay on this Mac.")
+                        Text("Teach Speakey the names, products, acronyms, and technical terms that make your writing yours. Dictionary words give both transcription and Smart Cleanup the right spelling, and stay on this Mac.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
@@ -1334,7 +1334,7 @@ struct DictionarySettingsView: View {
                 SettingsCard("Automatic Learning", icon: "sparkles") {
                     VStack(alignment: .leading, spacing: 8) {
                         Toggle("Learn words I use often", isOn: $store.automaticLearningEnabled)
-                        Text("Megaphone notices likely names and uncommon terms over time. New words start as suggestions and become active after they appear in three successful dictations; you can add, dismiss, disable, or remove them at any time.")
+                        Text("Speakey notices likely names and uncommon terms over time. New words start as suggestions and become active after they appear in three successful dictations; you can add, dismiss, disable, or remove them at any time.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -1377,7 +1377,7 @@ struct DictionarySettingsView: View {
                             ContentUnavailableView {
                                 Label(searchText.isEmpty ? "No saved words yet" : "No matching words", systemImage: "text.book.closed")
                             } description: {
-                                Text(searchText.isEmpty ? "Add the words Megaphone should always get right." : "Try a different search.")
+                                Text(searchText.isEmpty ? "Add the words Speakey should always get right." : "Try a different search.")
                             }
                             .frame(maxWidth: .infinity, minHeight: 130)
                         } else {
@@ -1400,7 +1400,7 @@ struct DictionarySettingsView: View {
                             .font(.system(.body, design: .monospaced))
                             .frame(minHeight: 70, maxHeight: 130)
                             .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.secondary.opacity(0.3)))
-                        Text("Example: mega phone → Megaphone")
+                        Text("Example: mega phone → Speakey")
                             .font(.caption2)
                             .foregroundStyle(.tertiary)
                     }
@@ -1476,7 +1476,7 @@ struct DictionarySettingsView: View {
     private func exportDictionary() {
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.json]
-        panel.nameFieldStringValue = "Megaphone Dictionary.json"
+        panel.nameFieldStringValue = "Speakey Dictionary.json"
         panel.title = "Export Dictionary"
         panel.message = "Choose where to save your Dictionary."
         panel.begin { response in
@@ -1497,7 +1497,7 @@ struct DictionarySettingsView: View {
         panel.allowedContentTypes = [.json]
         panel.allowsMultipleSelection = false
         panel.title = "Import Dictionary"
-        panel.message = "Choose a Dictionary file exported from Megaphone."
+        panel.message = "Choose a Dictionary file exported from Speakey."
         panel.begin { response in
             guard response == .OK, let url = panel.urls.first else { return }
             do {
@@ -1519,7 +1519,7 @@ struct DictionarySettingsView: View {
             } catch {
                 presentTransferError(
                     "Import Failed",
-                    "That file doesn't look like a Megaphone Dictionary export."
+                    "That file doesn't look like a Speakey Dictionary export."
                 )
             }
         }
@@ -2455,7 +2455,7 @@ struct TransformsSettingsView: View {
     private var transformsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Rewrite your last dictation by voice. Say “Hey Megaphone, polish that” right after dictating.")
+                Text("Rewrite your last dictation by voice. Say “Hey Speakey, polish that” right after dictating.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -2526,7 +2526,7 @@ struct TransformEditorView: View {
                 .font(.headline)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Name (What you say after “Hey Megaphone”)")
+                Text("Name (What you say after “Hey Speakey”)")
                     .font(.caption.weight(.semibold))
                 TextField("e.g. formalize", text: $name)
                     .textFieldStyle(.roundedBorder)

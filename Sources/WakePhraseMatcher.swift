@@ -1,13 +1,13 @@
 import Foundation
 
 enum WakePhrase: String, Equatable {
-    case heyMegaphone
-    case megaphone
+    case heySpeakey
+    case speakey
 
     var displayName: String {
         switch self {
-        case .heyMegaphone: return "Hey Megaphone"
-        case .megaphone: return "Megaphone"
+        case .heySpeakey: return "Hey Speakey"
+        case .speakey: return "Speakey"
         }
     }
 }
@@ -24,19 +24,19 @@ struct WakePhraseMatch: Equatable {
 /// transcript is observed after the cooldown, or the caller explicitly rearms
 /// the matcher for a new recognition session.
 struct WakePhraseMatcher {
-    var plainMegaphoneEnabled: Bool
+    var plainSpeakeyEnabled: Bool
     var cooldown: TimeInterval
 
     private var isArmed = true
     private var lastMatchDate: Date?
 
-    init(plainMegaphoneEnabled: Bool = false, cooldown: TimeInterval = 1.0) {
-        self.plainMegaphoneEnabled = plainMegaphoneEnabled
+    init(plainSpeakeyEnabled: Bool = false, cooldown: TimeInterval = 1.0) {
+        self.plainSpeakeyEnabled = plainSpeakeyEnabled
         self.cooldown = max(0, cooldown)
     }
 
     mutating func observe(_ transcript: String, at date: Date = Date()) -> WakePhraseMatch? {
-        let detected = Self.detect(in: transcript, plainMegaphoneEnabled: plainMegaphoneEnabled)
+        let detected = Self.detect(in: transcript, plainSpeakeyEnabled: plainSpeakeyEnabled)
 
         guard isArmed else {
             if detected == nil, cooldownHasElapsed(at: date) {
@@ -58,24 +58,24 @@ struct WakePhraseMatcher {
 
     static func detect(
         in transcript: String,
-        plainMegaphoneEnabled: Bool = false
+        plainSpeakeyEnabled: Bool = false
     ) -> WakePhraseMatch? {
-        if let match = match(pattern: heyPattern, phrase: .heyMegaphone, in: transcript) {
+        if let match = match(pattern: heyPattern, phrase: .heySpeakey, in: transcript) {
             return match
         }
         // SpeechAnalyzer occasionally drops the quiet leading “Hey” while
         // still returning the distinctive segmented product name. Recover
         // only “mega phone” here; broader acoustic aliases stay Hey-gated.
-        if let match = match(pattern: segmentedRecoveryPattern, phrase: .heyMegaphone, in: transcript) {
+        if let match = match(pattern: segmentedRecoveryPattern, phrase: .heySpeakey, in: transcript) {
             return match
         }
-        guard plainMegaphoneEnabled else { return nil }
-        return match(pattern: plainPattern, phrase: .megaphone, in: transcript)
+        guard plainSpeakeyEnabled else { return nil }
+        return match(pattern: plainPattern, phrase: .speakey, in: transcript)
     }
 
     static let recognitionHints = [
-        "Hey Megaphone",
-        "Megaphone",
+        "Hey Speakey",
+        "Speakey",
         "Hey Mega Phone",
         "Hey Make a Phone",
         "Hey Made a Phone",
@@ -115,9 +115,9 @@ struct WakePhraseMatcher {
     // these hidden aliases only recover common acoustic substitutions after
     // transcription. Fuzzy forms require the leading “Hey” phrase so enabling
     // the optional plain trigger cannot turn “make a phone call” into a command.
-    private static let strictMegaphoneVariants = "(?:megaphone|mega" + phraseSeparator + "phone)"
-    private static let fuzzyMegaphoneVariants = "(?:" + [
-        strictMegaphoneVariants,
+    private static let strictSpeakeyVariants = "(?:speakey|mega" + phraseSeparator + "phone)"
+    private static let fuzzySpeakeyVariants = "(?:" + [
+        strictSpeakeyVariants,
         "mega" + phraseSeparator + "fone",
         "mega" + phraseSeparator + "foam",
         "mega" + phraseSeparator + "form",
@@ -145,11 +145,11 @@ struct WakePhraseMatcher {
     private static let heyVariants = "(?:hey|he|hay|hi)"
 
     private static let heyPattern = try! NSRegularExpression(
-        pattern: leadingSeparators + heyVariants + phraseSeparator + fuzzyMegaphoneVariants + phraseBoundary,
+        pattern: leadingSeparators + heyVariants + phraseSeparator + fuzzySpeakeyVariants + phraseBoundary,
         options: [.caseInsensitive]
     )
     private static let plainPattern = try! NSRegularExpression(
-        pattern: leadingSeparators + "megaphone" + phraseBoundary,
+        pattern: leadingSeparators + "speakey" + phraseBoundary,
         options: [.caseInsensitive]
     )
     private static let segmentedRecoveryPattern = try! NSRegularExpression(

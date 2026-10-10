@@ -59,7 +59,7 @@ enum TranscriptTidierTests {
     private static func testCorrectionParsing() {
         let parsed = TranscriptTidier.CorrectionMapping.parse("""
         # Personal vocabulary
-        mega phone -> Megaphone
+        mega phone -> Speakey
         jason => JSON
         cube air → Kuber
         bad line
@@ -68,7 +68,7 @@ enum TranscriptTidierTests {
         too -> many -> arrows
         """)
         expectEqual(parsed, [
-            .init(spoken: "mega phone", replacement: "Megaphone"),
+            .init(spoken: "mega phone", replacement: "Speakey"),
             .init(spoken: "jason", replacement: "JSON"),
             .init(spoken: "cube air", replacement: "Kuber")
         ])
@@ -76,17 +76,17 @@ enum TranscriptTidierTests {
 
     private static func testCorrectionApplication() {
         let mappings = TranscriptTidier.CorrectionMapping.parse("""
-        mega phone -> Megaphone
+        mega phone -> Speakey
         jason -> JSON
         see plus plus -> C++
         """)
         expectEqual(
             TranscriptTidier.tidy("Use mega   phone with jason and see plus plus.", corrections: mappings),
-            "Use Megaphone with JSON and C++."
+            "Use Speakey with JSON and C++."
         )
         expectEqual(
-            TranscriptTidier.tidy("The megaphone uses jsonValue.", corrections: mappings),
-            "The megaphone uses jsonValue."
+            TranscriptTidier.tidy("The speakey uses jsonValue.", corrections: mappings),
+            "The speakey uses jsonValue."
         )
     }
 
