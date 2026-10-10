@@ -1033,6 +1033,15 @@ struct GeneralSettingsView: View {
             Divider()
                 .padding(.vertical, 2)
 
+            Toggle("Save recordings & history (off by default)", isOn: $appState.persistHistoryEnabled)
+
+            Text("When on, \(AppName.displayName) stores raw audio recordings and run history on disk until you remove them. When off, recordings are not saved and run history stays in-memory only.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Divider()
+                .padding(.vertical, 2)
+
             Toggle("Say \"press enter\" to submit after paste", isOn: $appState.isPressEnterVoiceCommandEnabled)
 
             Text("When the transcription ends with \"press enter\", \(AppName.displayName) removes those words before cleanup, pastes the remaining transcript, then presses Return.")

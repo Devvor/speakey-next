@@ -257,6 +257,7 @@ final class AppState: ObservableObject, @unchecked Sendable {
     private let outputLanguageStorageKey = "output_language"
     private let writingFormalityByContextStorageKey = "writing_formality_by_context"
     private let dictationAudioInterruptionEnabledStorageKey = "dictation_audio_interruption_enabled"
+    private let persistHistoryEnabledStorageKey = "persistHistoryEnabled"
     private let mouseDictationEnabledStorageKey = "mouse_dictation_enabled"
     private let mouseDictationButtonStorageKey = "mouse_dictation_button"
     private let pasteAfterShortcutReleaseDelay: TimeInterval = 0.03
@@ -491,6 +492,12 @@ final class AppState: ObservableObject, @unchecked Sendable {
         }
     }
 
+    @Published var persistHistoryEnabled: Bool {
+        didSet {
+            UserDefaults.standard.set(persistHistoryEnabled, forKey: persistHistoryEnabledStorageKey)
+        }
+    }
+
     @Published var preserveClipboard: Bool {
         didSet {
             UserDefaults.standard.set(preserveClipboard, forKey: preserveClipboardStorageKey)
@@ -650,7 +657,7 @@ final class AppState: ObservableObject, @unchecked Sendable {
     private var capturedContext: AppContext?
     private var audioDeviceObservers: [NSObjectProtocol] = []
     private var needsMicrophoneRefreshAfterRecording = false
-    private let pipelineHistoryStore = PipelineHistoryStore()
+    private let pipelineHistoryStore: PipelineHistoryStore
     private let shortcutSessionController = DictationShortcutSessionController()
     private var activeRecordingTriggerMode: RecordingTriggerMode?
     private var currentSessionIntent: SessionIntent = .dictation
@@ -749,6 +756,9 @@ final class AppState: ObservableObject, @unchecked Sendable {
         let dictationAudioInterruptionEnabled = UserDefaults.standard.bool(
             forKey: dictationAudioInterruptionEnabledStorageKey
         )
+        let persistHistoryEnabled = UserDefaults.standard.object(forKey: persistHistoryEnabledStorageKey) as? Bool ?? false
+
+        self.pipelineHistoryStore = PipelineHistoryStore(persistToDisk: persistHistoryEnabled)
         let isPressEnterVoiceCommandEnabled = UserDefaults.standard.object(forKey: pressEnterVoiceCommandStorageKey) == nil
             ? true
             : UserDefaults.standard.bool(forKey: pressEnterVoiceCommandStorageKey)
@@ -833,6 +843,7 @@ final class AppState: ObservableObject, @unchecked Sendable {
         self.preserveExactWording = smartCleanupMode == .exact
         self.keepDictationInClipboardHistory = keepDictationInClipboardHistory
         self.dictationAudioInterruptionEnabled = dictationAudioInterruptionEnabled
+        self.persistHistoryEnabled = persistHistoryEnabled
         self.isPressEnterVoiceCommandEnabled = isPressEnterVoiceCommandEnabled
         self.isScratchThatCommandEnabled = isScratchThatCommandEnabled
         self.alertSoundsEnabled = alertSoundsEnabled
@@ -2941,7 +2952,7 @@ final class AppState: ObservableObject, @unchecked Sendable {
                 return
             }
 
-            let savedAudioFile = Self.saveAudioFile(from: fileURL)
+            let savedAudioFile = self.persistHistoryEnabled ? Self.saveAudioFile(from: fileURL) : nil
             let transcriptionFileURL = savedAudioFile?.fileURL ?? fileURL
             self.transcribingAudioFileName = savedAudioFile?.fileName
             self.statusText = "Transcribing..."

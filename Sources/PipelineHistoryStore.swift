@@ -5,60 +5,67 @@ final class PipelineHistoryStore {
     private let container: NSPersistentContainer
     private let isStoreLoaded: Bool
 
-    init() {
+    init(persistToDisk: Bool = true) {
         let model = Self.makeModel()
         container = NSPersistentContainer(name: "PipelineHistory", managedObjectModel: model)
 
-        var storeURL: URL?
-        if let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
-            let appName = AppName.displayName
-            let baseURL = appSupport.appendingPathComponent(appName, isDirectory: true)
-            try? FileManager.default.createDirectory(at: baseURL, withIntermediateDirectories: true)
-            storeURL = baseURL.appendingPathComponent("PipelineHistory.sqlite")
-        }
+        if persistToDisk {
+            var storeURL: URL?
+            if let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first {
+                let appName = AppName.displayName
+                let baseURL = appSupport.appendingPathComponent(appName, isDirectory: true)
+                try? FileManager.default.createDirectory(at: baseURL, withIntermediateDirectories: true)
+                storeURL = baseURL.appendingPathComponent("PipelineHistory.sqlite")
+            }
 
-        if let storeURL {
-            let description = NSPersistentStoreDescription(url: storeURL)
-            description.shouldMigrateStoreAutomatically = true
-            description.shouldInferMappingModelAutomatically = true
-            container.persistentStoreDescriptions = [description]
-        } else {
-            container.persistentStoreDescriptions = [NSPersistentStoreDescription()]
-        }
-
-        if Self.loadPersistentStoresSynchronously(container: container) == nil {
-            isStoreLoaded = true
-        } else {
             if let storeURL {
-                print("[PipelineHistoryStore] Failed to load persistent store at \(storeURL.path). Attempting recovery.")
-                Self.destroySQLiteStoreFiles(at: storeURL)
-
-                // Clear any partially loaded stores and reset descriptions before retrying.
-                let coordinator = container.persistentStoreCoordinator
-                for store in coordinator.persistentStores {
-                    try? coordinator.remove(store)
-                }
-
-                let recoveryDescription = NSPersistentStoreDescription(url: storeURL)
-                recoveryDescription.shouldMigrateStoreAutomatically = true
-                recoveryDescription.shouldInferMappingModelAutomatically = true
-                container.persistentStoreDescriptions = [recoveryDescription]
+                let description = NSPersistentStoreDescription(url: storeURL)
+                description.shouldMigrateStoreAutomatically = true
+                description.shouldInferMappingModelAutomatically = true
+                container.persistentStoreDescriptions = [description]
+            } else {
+                container.persistentStoreDescriptions = [NSPersistentStoreDescription()]
             }
 
             if Self.loadPersistentStoresSynchronously(container: container) == nil {
                 isStoreLoaded = true
             } else {
-                print("[PipelineHistoryStore] Failed to recover persistent store. Falling back to in-memory history.")
-                let coordinator = container.persistentStoreCoordinator
-                for store in coordinator.persistentStores {
-                    try? coordinator.remove(store)
+                if let storeURL {
+                    print("[PipelineHistoryStore] Failed to load persistent store at \(storeURL.path). Attempting recovery.")
+                    Self.destroySQLiteStoreFiles(at: storeURL)
+
+                    let coordinator = container.persistentStoreCoordinator
+                    for store in coordinator.persistentStores {
+                        try? coordinator.remove(store)
+                    }
+
+                    let recoveryDescription = NSPersistentStoreDescription(url: storeURL)
+                    recoveryDescription.shouldMigrateStoreAutomatically = true
+                    recoveryDescription.shouldInferMappingModelAutomatically = true
+                    container.persistentStoreDescriptions = [recoveryDescription]
                 }
-                let description = NSPersistentStoreDescription()
-                description.type = NSInMemoryStoreType
-                container.persistentStoreDescriptions = [description]
-                isStoreLoaded = Self.loadPersistentStoresSynchronously(container: container) == nil
+
+                if Self.loadPersistentStoresSynchronously(container: container) == nil {
+                    isStoreLoaded = true
+                } else {
+                    print("[PipelineHistoryStore] Failed to recover persistent store. Falling back to in-memory history.")
+                    let coordinator = container.persistentStoreCoordinator
+                    for store in coordinator.persistentStores {
+                        try? coordinator.remove(store)
+                    }
+                    let description = NSPersistentStoreDescription()
+                    description.type = NSInMemoryStoreType
+                    container.persistentStoreDescriptions = [description]
+                    isStoreLoaded = Self.loadPersistentStoresSynchronously(container: container) == nil
+                }
             }
+            return
         }
+
+        let description = NSPersistentStoreDescription()
+        description.type = NSInMemoryStoreType
+        container.persistentStoreDescriptions = [description]
+        isStoreLoaded = Self.loadPersistentStoresSynchronously(container: container) == nil
     }
 
     func loadAllHistory() -> [PipelineHistoryItem] {
