@@ -1,0 +1,40 @@
+perp
+OI
+open interest
+funding
+funding rate
+liquidation
+liquidation cascade
+Hyperliquid
+Arbitrum
+Solana
+DeFi
+TPS
+AMM
+orderbook
+DEX
+CEX
+stablecoin
+memecoin
+airdrop
+points
+farm
+gauge
+ve(3,3)
+DAO
+L2
+mainnet
+testnet
+hotkey
+API key
+DMG
+CLI
+PR
+CI
+Xcode
+SwiftUI
+CoreML
+Neural Engine
+Parakeet
+Whisper
+WER

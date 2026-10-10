@@ -170,6 +170,8 @@ final class DictionaryStore: ObservableObject {
             ? true
             : defaults.bool(forKey: automaticLearningKey)
         migrateLegacyVocabularyIfNeeded()
+        seedFromBundledVocabularyIfNeeded()
+        mergeUserEditableVocabularyIfPresent()
     }
 
     var activeTerms: [String] {
