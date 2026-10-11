@@ -6,6 +6,8 @@ funding rate
 liquidation
 liquidation cascade
 Hyperliquid
+HYPE
+HLP
 Arbitrum
 Solana
 DeFi
@@ -38,3 +40,72 @@ Neural Engine
 Parakeet
 Whisper
 WER
+PONS
+QTC
+Quantus
+Elfa
+Jev
+Devvor
+INFER
+ZEC
+Zcash
+Robinhood Chain
+Uniswap
+Derive
+GRVT
+Arcus
+Lighter
+Polymarket
+Coinglass
+Loris
+Nansen
+Artemis
+Arkham
+DeBank
+vault
+watchdog
+cron
+gateway
+candle
+wick
+drawdown
+max drawdown
+sharpe
+delta neutral
+basis
+carry
+long bias
+short bias
+stop loss
+take profit
+entry
+exit
+breakout
+support
+resistance
+bagger
+rotation
+narrative
+mindshare
+smart money
+whale
+tape
+flow
+GEX
+gamma flip
+open interest dominance
+liquidation heat map
+swiftc
+git
+GitHub
+SSH
+keychain
+notarize
+codesign
+sandbox
+entitlements
+Slack
+Telegram
+Obsidian
+Vercel
+Tailscale
