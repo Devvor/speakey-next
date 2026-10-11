@@ -119,7 +119,7 @@ enum AppWritingContext: String, Equatable, Sendable {
         let title = windowTitle?.lowercased() ?? ""
         let identity = "\(app) \(bundle)"
         let all = "\(identity) \(title)"
-        // An email address in a window title ("kuber@gmail.com - Google
+        // An email address in a window title ("dev@devvor.ai - Google
         // Account") must not read as webmail; only the service name counts.
         let allWithoutAddresses = all.replacingOccurrences(
             of: #"[a-z0-9._%+-]+@[a-z0-9.-]+"#,
