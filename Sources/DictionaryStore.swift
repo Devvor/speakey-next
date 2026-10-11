@@ -456,10 +456,10 @@ final class DictionaryStore: ObservableObject {
     }
 
     /// Seeds the dictionary on first launch from the bundled vocabulary.txt
-    /// (crypto/dev jargon). Only runs when the store has no entries yet, so
-    /// it never fights the user's own dictionary on later launches.
+    /// (crypto/dev jargon). On later launches, merges in any bundled terms the
+    /// user is missing, so updated bundles add words without clobbering the
+    /// user's own dictionary.
     private func seedFromBundledVocabularyIfNeeded() {
-        guard entries.isEmpty else { return }
         guard let url = Bundle.main.url(forResource: "vocabulary", withExtension: "txt"),
               let text = try? String(contentsOf: url, encoding: .utf8) else { return }
 
@@ -469,6 +469,7 @@ final class DictionaryStore: ObservableObject {
             .map(Self.cleaned)
             .filter { !$0.isEmpty }
 
+        var didChange = false
         for term in terms where index(of: term) == nil {
             entries.append(DictionaryEntry(
                 term: term,
@@ -478,8 +479,9 @@ final class DictionaryStore: ObservableObject {
                 createdAt: now,
                 updatedAt: now
             ))
+            didChange = true
         }
-        if !entries.isEmpty { persist() }
+        if didChange { persist() }
     }
 
     /// Merges terms from a user-editable file at
