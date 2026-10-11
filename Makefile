@@ -3,6 +3,16 @@ BUNDLE_ID ?= com.devvor.speakey.dev
 BUILD_DIR = build
 APP_BUNDLE = $(BUILD_DIR)/$(APP_NAME).app
 CODESIGN_IDENTITY ?= Speakey Dev
+# Use the named identity if it exists in the keychain; otherwise fall back to
+# ad-hoc signing ("-") so local builds work without any certificate setup.
+# Note: ad-hoc identities change on each rebuild, so macOS may re-prompt for
+# mic/accessibility permissions after a rebuild. Create a self-signed cert
+# named "Speakey Dev" in Keychain Access to get a stable identity.
+ifeq ($(shell security find-identity -v -p codesigning 2>/dev/null | grep -c '"$(CODESIGN_IDENTITY)"'),1)
+EFFECTIVE_IDENTITY := $(CODESIGN_IDENTITY)
+else
+EFFECTIVE_IDENTITY := -
+endif
 CONTENTS = $(APP_BUNDLE)/Contents
 MACOS_DIR = $(CONTENTS)/MacOS
 empty :=
@@ -98,8 +108,8 @@ endif
 	@plutil -replace NSMicrophoneUsageDescription -string "$(APP_NAME) needs microphone access to transcribe your speech." "$(CONTENTS)/Info.plist"
 	@plutil -replace NSSpeechRecognitionUsageDescription -string "$(APP_NAME) needs speech recognition to convert your voice to text." "$(CONTENTS)/Info.plist"
 	@plutil -replace NSAccessibilityUsageDescription -string "$(APP_NAME) needs accessibility access to detect the text cursor position and paste transcribed text." "$(CONTENTS)/Info.plist"
-	@codesign --force --options runtime --sign "$(CODESIGN_IDENTITY)" --entitlements Speakey.entitlements "$(CORE_EXECUTABLE)"
-	@codesign --force --options runtime --sign "$(CODESIGN_IDENTITY)" --entitlements Speakey.entitlements "$(APP_BUNDLE)"
+	@codesign --force --options runtime --sign "$(EFFECTIVE_IDENTITY)" --entitlements Speakey.entitlements "$(CORE_EXECUTABLE)"
+	@codesign --force --options runtime --sign "$(EFFECTIVE_IDENTITY)" --entitlements Speakey.entitlements "$(APP_BUNDLE)"
 	@echo "Built $(APP_BUNDLE)"
 
 test: $(TEST_RUNNER)
@@ -158,7 +168,7 @@ dmg: all
 	@echo "Created $(BUILD_DIR)/$(APP_NAME).dmg"
 
 codesign-dmg: dmg
-	codesign --force --sign "$(CODESIGN_IDENTITY)" "$(BUILD_DIR)/$(APP_NAME).dmg"
+	codesign --force --sign "$(EFFECTIVE_IDENTITY)" "$(BUILD_DIR)/$(APP_NAME).dmg"
 
 notarize:
 	xcrun notarytool submit "$(BUILD_DIR)/$(APP_NAME).dmg" \
