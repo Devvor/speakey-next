@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://speakey.kuber.studio/sitemap.xml
