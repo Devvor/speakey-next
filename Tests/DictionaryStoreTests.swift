@@ -169,7 +169,7 @@ enum DictionaryStoreTests {
         _ = try! store.addManual("Apple")
         store.setStarred(true, for: starredEntry.id)
         store.recordUsage(in: "Ship the Devvor build")
-        store.recordUsage(in: "Ping Kuber about Obsidian")
+        store.recordUsage(in: "Ping Devvor about Obsidian")
 
         // Starred beats usage, usage beats alphabetical, alphabetical breaks ties.
         expectEqual(store.activeTerms, ["Zig", "Devvor", "Obsidian", "Apple"])
@@ -298,9 +298,9 @@ enum DictionaryStoreTests {
     private static func testMergedCorrections() {
         let merged = DictionaryStore.mergedCorrections(
             local: "mega phone → Speakey\n",
-            imported: "MEGA PHONE → Speakey\nkuber → Kuber\n\nkuber → Kuber"
+            imported: "MEGA PHONE → Speakey\ndevvor → Devvor\n\ndevvor → Devvor"
         )
-        expectEqual(merged.text, "mega phone → Speakey\nkuber → Kuber")
+        expectEqual(merged.text, "mega phone → Speakey\ndevvor → Devvor")
         expectEqual(merged.addedCount, 1)
 
         let fromEmpty = DictionaryStore.mergedCorrections(local: "", imported: "a → b")
