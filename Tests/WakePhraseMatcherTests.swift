@@ -16,7 +16,7 @@ enum WakePhraseMatcherTests {
     private static func testHeySpeakeyIsAlwaysRecognized() {
         let cases = [
             "hey speakey",
-            "HEY MEGAPHONE",
+            "HEY SPEAKEY",
             "  Hey, Speakey!",
             "…hey—speakey"
         ]

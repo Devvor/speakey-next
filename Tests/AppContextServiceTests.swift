@@ -117,7 +117,7 @@ struct AppContextServiceTests {
             "Obsidian should be a markdown surface"
         )
         expect(
-            AppWritingContext.supportsMarkdown(appName: "Google Chrome", bundleIdentifier: "com.google.Chrome", windowTitle: "Editing speakey/README.md at main · Kuberwastaken/speakey · GitHub"),
+            AppWritingContext.supportsMarkdown(appName: "Google Chrome", bundleIdentifier: "com.google.Chrome", windowTitle: "Editing speakey-next/README.md at main · Devvor/speakey-next · GitHub"),
             "GitHub in a browser should be a markdown surface"
         )
         expect(
@@ -197,11 +197,11 @@ struct AppContextServiceTests {
             "Telegram should use casual-chat writing context"
         )
         expect(
-            AppWritingContext.classify(appName: "Google Chrome", bundleIdentifier: "com.google.Chrome", windowTitle: "Inbox (42) - kuber@gmail.com - Gmail") == .email,
+            AppWritingContext.classify(appName: "Google Chrome", bundleIdentifier: "com.google.Chrome", windowTitle: "Inbox (42) - dev@devvor.ai - Gmail") == .email,
             "Gmail in a browser should use email writing context"
         )
         expect(
-            AppWritingContext.classify(appName: "Google Chrome", bundleIdentifier: "com.google.Chrome", windowTitle: "kuber@gmail.com - Google Account") == .neutral,
+            AppWritingContext.classify(appName: "Google Chrome", bundleIdentifier: "com.google.Chrome", windowTitle: "dev@devvor.ai - Google Account") == .neutral,
             "A Gmail address alone should not read as email writing context"
         )
     }

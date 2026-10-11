@@ -38,15 +38,15 @@ enum DictionaryStoreTests {
         let (store, defaults) = makeStore()
         defer { clear(defaults) }
 
-        store.observe(candidateTerms: ["Kuber", "Kuber"])
+        store.observe(candidateTerms: ["Devvor", "Devvor"])
         expectEqual(store.entries.first?.observationCount, 1)
         expectEqual(store.entries.first?.status, .suggested)
         expect(store.activeTerms.isEmpty, "A one-off suggestion became active")
-        store.observe(candidateTerms: ["kuber"])
+        store.observe(candidateTerms: ["devvor"])
         expectEqual(store.entries.first?.observationCount, 2)
-        store.observe(candidateTerms: ["Kuber"])
+        store.observe(candidateTerms: ["Devvor"])
         expectEqual(store.entries.first?.status, .active)
-        expectEqual(store.activeTerms, ["Kuber"])
+        expectEqual(store.activeTerms, ["Devvor"])
     }
 
     private static func testManualEntryPromotesSuggestion() {
@@ -79,14 +79,14 @@ enum DictionaryStoreTests {
     private static func testLegacyMigrationRunsOnce() {
         let suite = "DictionaryStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!
-        defaults.set("Speakey\nSpeechAnalyzer, Kuber; Foundation Models", forKey: "legacy")
+        defaults.set("Speakey\nSpeechAnalyzer, Devvor; Foundation Models", forKey: "legacy")
         let store = DictionaryStore(
             defaults: defaults,
             storageKey: "entries",
             migrationKey: "migrated",
             legacyVocabularyKey: "legacy"
         )
-        expectEqual(Set(store.activeTerms), Set(["Speakey", "SpeechAnalyzer", "Kuber", "Foundation Models"]))
+        expectEqual(Set(store.activeTerms), Set(["Speakey", "SpeechAnalyzer", "Devvor", "Foundation Models"]))
 
         defaults.set("A later legacy edit", forKey: "legacy")
         let reloaded = DictionaryStore(
@@ -95,7 +95,7 @@ enum DictionaryStoreTests {
             migrationKey: "migrated",
             legacyVocabularyKey: "legacy"
         )
-        expectEqual(Set(reloaded.activeTerms), Set(["Speakey", "SpeechAnalyzer", "Kuber", "Foundation Models"]))
+        expectEqual(Set(reloaded.activeTerms), Set(["Speakey", "SpeechAnalyzer", "Devvor", "Foundation Models"]))
         defaults.removePersistentDomain(forName: suite)
     }
 
@@ -111,9 +111,9 @@ enum DictionaryStoreTests {
 
     private static func testConservativeCandidateExtraction() {
         let candidates = DictionaryTermLearner.candidates(
-            from: "Please send this to Kuber and keep SpeechAnalyzer, GPT-5, and JSON intact."
+            from: "Please send this to Devvor and keep SpeechAnalyzer, GPT-5, and JSON intact."
         )
-        expect(candidates.contains("Kuber"), "Missed a mid-sentence name")
+        expect(candidates.contains("Devvor"), "Missed a mid-sentence name")
         expect(candidates.contains("SpeechAnalyzer"), "Missed an internal-cap technical term")
         expect(candidates.contains("GPT-5"), "Missed a versioned technical term")
         expect(candidates.contains("JSON"), "Missed an acronym")
@@ -124,13 +124,13 @@ enum DictionaryStoreTests {
     private static func testDismissedSuggestionStaysDismissed() {
         let (store, defaults) = makeStore()
         defer { clear(defaults) }
-        store.observe(candidateTerms: ["Kuber"])
+        store.observe(candidateTerms: ["Devvor"])
         let entry = store.entries[0]
         store.dismissSuggestion(id: entry.id)
-        store.observe(candidateTerms: ["Kuber"])
+        store.observe(candidateTerms: ["Devvor"])
         expectEqual(store.entries[0].status, .rejected)
         expectEqual(store.entries[0].observationCount, 1)
-        let restored = try! store.addManual("Kuber")
+        let restored = try! store.addManual("Devvor")
         expectEqual(restored.status, .active)
         expectEqual(restored.source, .manual)
     }
@@ -164,15 +164,15 @@ enum DictionaryStoreTests {
         defer { clear(defaults) }
 
         _ = try! store.addManual("Obsidian")
-        _ = try! store.addManual("Kuber")
+        _ = try! store.addManual("Devvor")
         let starredEntry = try! store.addManual("Zig")
         _ = try! store.addManual("Apple")
         store.setStarred(true, for: starredEntry.id)
-        store.recordUsage(in: "Ship the Kuber build")
+        store.recordUsage(in: "Ship the Devvor build")
         store.recordUsage(in: "Ping Kuber about Obsidian")
 
         // Starred beats usage, usage beats alphabetical, alphabetical breaks ties.
-        expectEqual(store.activeTerms, ["Zig", "Kuber", "Obsidian", "Apple"])
+        expectEqual(store.activeTerms, ["Zig", "Devvor", "Obsidian", "Apple"])
     }
 
     private static func testUsageMatchingRespectsWordBoundaries() {
@@ -224,7 +224,7 @@ enum DictionaryStoreTests {
 
         let starred = try! store.addManual("Speakey")
         store.setStarred(true, for: starred.id)
-        store.observe(candidateTerms: ["Kuber"])
+        store.observe(candidateTerms: ["Devvor"])
 
         let document = store.exportDocument(exactCorrections: "mega phone → Speakey")
         let decoded = try! DictionaryExportDocument.decode(try! document.encoded())
@@ -245,7 +245,7 @@ enum DictionaryStoreTests {
         defer { clear(defaults) }
 
         _ = try! store.addManual("Speakey")
-        store.observe(candidateTerms: ["Kuber"]) // local suggestion
+        store.observe(candidateTerms: ["Devvor"]) // local suggestion
         store.observe(candidateTerms: ["Cursor"])
         store.dismissSuggestion(id: store.entries.first { $0.term == "Cursor" }!.id)
         store.observe(candidateTerms: ["Claurst"])
@@ -255,7 +255,7 @@ enum DictionaryStoreTests {
             // Duplicate of a local active entry: stars and usage merge in.
             DictionaryEntry(term: "speakey", source: .manual, status: .active, starred: true, usageCount: 9),
             // Explicitly taught on the other Mac: activates the local suggestion.
-            DictionaryEntry(term: "Kuber", source: .manual, status: .active),
+            DictionaryEntry(term: "Devvor", source: .manual, status: .active),
             // A mere suggestion elsewhere must not resurrect a local rejection.
             DictionaryEntry(term: "Cursor", source: .learned, status: .suggested),
             // But an explicit activation elsewhere wins over a local rejection.
@@ -271,7 +271,7 @@ enum DictionaryStoreTests {
         let speakey = store.entries.first { $0.term == "Speakey" }!
         expectEqual(speakey.starred, true)
         expectEqual(speakey.usageCount, 9)
-        expectEqual(store.entries.first { $0.term == "Kuber" }?.status, .active)
+        expectEqual(store.entries.first { $0.term == "Devvor" }?.status, .active)
         expectEqual(store.entries.first { $0.term == "Cursor" }?.status, .rejected)
         let claurst = store.entries.first { $0.term == "Claurst" }!
         expectEqual(claurst.status, .active)
